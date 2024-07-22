@@ -280,24 +280,24 @@ function populateCourseDropdown() {
     courseSelect.innerHTML = '<option value="" disabled selected>Select Course</option>';
     const allCourses = Object.values(semesterCourses).reduce((acc, subs) => { return { ...acc, ...subs }; }, {});
     coreCourses.concat(Object.values(allCourses
-         || {})).forEach(course => {
-        if (!existingCourses.includes(course.courseCode) && course.courseCode && course.courseName) {
-            const option = document.createElement('option');
-            option.value = course.courseCode;
-            option.textContent = `${course.courseCode} - ${course.courseName}`;
-            option.dataset.courseName = course.courseName;
-            option.dataset.credits = course.credits;
-            option.dataset.description = course.description;
-            option.dataset.lectureContactHours = course.lectureContactHours;
-            option.dataset.labContactHours = course.labContactHours;
-            option.dataset.prerequisite = course.prerequisite;
-            option.dataset.repeatability = course.repeatability;
-            option.dataset.note = course.note;
-            option.dataset.tccns = course.tccns;
-            option.dataset.additionalFee = course.additionalFee;
-            courseSelect.appendChild(option);
-        }
-    });
+        || {})).forEach(course => {
+            if (!existingCourses.includes(course.courseCode) && course.courseCode && course.courseName) {
+                const option = document.createElement('option');
+                option.value = course.courseCode;
+                option.textContent = `${course.courseCode} - ${course.courseName}`;
+                option.dataset.courseName = course.courseName;
+                option.dataset.credits = course.credits;
+                option.dataset.description = course.description;
+                option.dataset.lectureContactHours = course.lectureContactHours;
+                option.dataset.labContactHours = course.labContactHours;
+                option.dataset.prerequisite = course.prerequisite;
+                option.dataset.repeatability = course.repeatability;
+                option.dataset.note = course.note;
+                option.dataset.tccns = course.tccns;
+                option.dataset.additionalFee = course.additionalFee;
+                courseSelect.appendChild(option);
+            }
+        });
     console.log('Course dropdown populated'); // Debug log
 }
 
@@ -444,7 +444,7 @@ function createCoreCourseRow(year, sem, showDeleteButton) {
     row.appendChild(courseCodeCell);
 
     const courseNameCell = document.createElement('td');
-    courseNameCell.className = 'core-course-name clickable';  
+    courseNameCell.className = 'core-course-name clickable';
     courseNameCell.onclick = () => showModal({
         heading: courseSelect.selectedOptions[0].dataset.courseName,
         credits: courseSelect.selectedOptions[0].dataset.credits,
@@ -456,7 +456,7 @@ function createCoreCourseRow(year, sem, showDeleteButton) {
         note: courseSelect.selectedOptions[0].dataset.note,
         tccns: courseSelect.selectedOptions[0].dataset.tccns,
         additionalFee: courseSelect.selectedOptions[0].dataset.additionalFee
-    });  
+    });
     row.appendChild(courseNameCell);
 
     const creditsCell = document.createElement('td');
@@ -487,9 +487,9 @@ function getRelevantCoreCourses(year, sem) {
     let additionalCourses = [];
 
     if (year === 1 && sem === 1) {
-        excludedCourses = ["core",'CLAS 3374', 'PHIL 1301'];
-    } else if (year === 3 || year === 4) { 
-        excludedCourses = ["core",'DRAM 1310', 'MUSI 1307'];
+        excludedCourses = ["core", 'CLAS 3374', 'PHIL 1301'];
+    } else if (year === 3 || year === 4) {
+        excludedCourses = ["core", 'DRAM 1310', 'MUSI 1307'];
     }
 
     let relevantCourses = coreCourses.filter(course => !excludedCourses.includes(course.courseCode));
@@ -502,14 +502,14 @@ function updateCoreCourse(event, row) {
     const selectedOption = event.target.selectedOptions[0];
     const courseName = selectedOption.dataset.courseName;
     const credits = selectedOption.dataset.credits;
-    const description = selectedOption.dataset.description;  
+    const description = selectedOption.dataset.description;
     const lectureContactHours = selectedOption.dataset.lectureContactHours;
     const labContactHours = selectedOption.dataset.labContactHours;
     const prerequisite = selectedOption.dataset.prerequisite;
     const repeatability = selectedOption.dataset.repeatability;
     const note = selectedOption.dataset.note;
     const tccns = selectedOption.dataset.tccns;
-    const additionalFee = selectedOption.dataset.additionalFee;  
+    const additionalFee = selectedOption.dataset.additionalFee;
 
     const courseNameCell = row.querySelector('.core-course-name');
     const creditsCell = row.querySelector('.core-course-credits');
@@ -592,7 +592,7 @@ function downloadPDF() {
             pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
             heightLeft -= pageHeight;
         }
-        
+
         pdf.save('course-plan.pdf');
     });
 }
@@ -614,32 +614,30 @@ function toggleAdminView() {
     document.getElementById('adminViewButton').style.display = 'none';
     document.getElementById('homeButton').style.display = 'inline';
     document.getElementById('show-all-courses').style.display = 'list-item';
-    const loginForm = document.getElementById("adminButton");
-    const btn_submit1 = document.getElementById("btn_submit1");
-    btn_submit1.addEventListener("click", (e) => {
-    e.preventDefault();
+    loadAdminView();
+}
+
+function login() {
     const username = document.getElementById('username').value;
     const password = document.getElementById('password').value;
 
-    if(username === "admin" && password === "admin123"){
+    if (username === "admin" && password === "admin123") {
         localStorage.setItem("loggedIn", "true");
-        loadAdminView();
     }
-    else{
+    else {
         document.getElementById('error').textContent = 'Invalid credentials';
     }
-});
+    toggleAdminView();
 }
 
 
 function loadAdminView() {
-    document.getElementById('login-container').remove();
+    document.getElementById('login-container')?.remove();
     document.getElementById('courses-container').style.display = 'flex';
     document.getElementById('adminViewButton').style.display = 'none';
     document.getElementById('downloadButton').style.display = 'none';
     document.getElementById('homeButton').style.display = 'inline';
     document.getElementById('course-add-container').style.display = 'block';
-    document.getElementById('showCoursesButton').style.display = 'block';
 
     // Re-populate tables to show delete buttons and the Action column
     const courseDetails = getCourseDetails();
@@ -666,7 +664,7 @@ function openEditModal(courseCode, course) {
     document.getElementById('editModal').style.display = 'block';
 
     const form = document.getElementById('editCourseForm');
-    form.onsubmit = function(event) {
+    form.onsubmit = function (event) {
         event.preventDefault();
         saveEditedCourse(courseCode);
     }
