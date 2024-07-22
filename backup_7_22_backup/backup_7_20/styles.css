@@ -27,7 +27,6 @@ body, html {
   align-items: flex-start;
   background: #f5f3f3;
   font-family: 'Roboto', sans-serif;
-  overflow-y: scroll;
 }
 
 .main img {
