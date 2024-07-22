@@ -598,11 +598,12 @@ function downloadPDF() {
 }
 
 function toggleHomeView() {
-    document.getElementById('adminButton').style.display = 'inline';
+    document.getElementById('adminViewButton').style.display = 'inline';
     document.getElementById('downloadButton').style.display = 'inline';
     document.getElementById('homeButton').style.display = 'none';
     document.getElementById('course-add-container').style.display = 'none';
     document.getElementById('available-courses').style.display = 'none';
+    document.getElementById('show-all-courses').style.display = 'none';
 
     // Re-populate tables to hide delete buttons and the Action column
     const courseDetails = getCourseDetails();
@@ -610,6 +611,9 @@ function toggleHomeView() {
 }
 
 function toggleAdminView() {
+    document.getElementById('adminViewButton').style.display = 'none';
+    document.getElementById('homeButton').style.display = 'inline';
+    document.getElementById('show-all-courses').style.display = 'list-item';
     const loginForm = document.getElementById("adminButton");
     const btn_submit1 = document.getElementById("btn_submit1");
     btn_submit1.addEventListener("click", (e) => {
@@ -625,10 +629,13 @@ function toggleAdminView() {
         document.getElementById('error').textContent = 'Invalid credentials';
     }
 });
+}
 
 
 function loadAdminView() {
-    document.getElementById('adminButton').style.display = 'none';
+    document.getElementById('login-container').remove();
+    document.getElementById('courses-container').style.display = 'flex';
+    document.getElementById('adminViewButton').style.display = 'none';
     document.getElementById('downloadButton').style.display = 'none';
     document.getElementById('homeButton').style.display = 'inline';
     document.getElementById('course-add-container').style.display = 'block';
